@@ -95,10 +95,10 @@
             try {
                 const response = await fetch('http://localhost:3000/live-score');
                 const scoreData = await response.json();
-                console.log(scoreData); // Debug: Log data
+                console.log(scoreData);
 
                 const matchesElement = document.getElementById('matches');
-                matchesElement.innerHTML = ''; // Clear content
+                matchesElement.innerHTML = '';
 
                 if (scoreData && scoreData.data) {
                     scoreData.data.forEach(match => {
@@ -125,7 +125,7 @@
         }
 
         fetchScore();
-        setInterval(fetchScore, 3000); // Update every minute
+        setInterval(fetchScore, 60000);
     </script>
 </body>
 </html>

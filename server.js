@@ -1,12 +1,11 @@
 const express = require('express');
 const axios = require('axios');
-const cors = require('cors'); // Import CORS middleware
+const cors = require('cors');
 const app = express();
 const port = 3000;
 
-const API_KEY = '126596e1-9625-44d1-ba25-22cccd26a5b0';  // Your CricAPI key
+const API_KEY = '126596e1-9625-44d1-ba25-22cccd26a5b0';
 
-// Use CORS middleware
 app.use(cors());
 
 app.use(express.static('public'));
@@ -18,7 +17,7 @@ app.get('/live-score', async (req, res) => {
                 apikey: API_KEY
             }
         });
-        console.log('API response:', response.data);  // Log API response
+        console.log('API response:', response.data);
         res.json(response.data);
     } catch (error) {
         console.error('Error fetching live score:', error.message);
