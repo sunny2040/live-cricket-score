@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Cricket Score</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+        h1 {
+            color: #007bff;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        #score {
+            max-width: 1000px;
+            width: 90%;
+            margin: 0 auto;
+            padding: 20px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            border-radius: 8px;
+        }
+        .match {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            background: linear-gradient(135deg, #f8f9fa 25%, #fff 75%);
+        }
+        .match:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        .match h2 {
+            margin: 0;
+            padding: 15px;
+            font-size: 1.5em;
+            background-color: #007bff;
+            color: #fff;
+            width: 100%;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .match p {
+            margin: 10px 15px;
+            font-size: 1em;
+            color: #555;
+        }
+        .status {
+            font-weight: bold;
+            color: #28a745;
+        }
+        .venue {
+            font-style: italic;
+            color: #6c757d;
+        }
+        .date {
+            color: #17a2b8;
+        }
+        .teams {
+            font-weight: bold;
+            color: #dc3545;
+        }
+        .fa-cricket {
+            color: #ffcd3c;
+        }
+        .no-data {
+            font-size: 1.2em;
+            color: #dc3545;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="score">
+        <h1><i class="fas fa-cricket"></i> Live Cricket Score</h1>
+        <div id="matches">Fetching score...</div>
+    </div>
+    <script>
+        async function fetchScore() {
+            try {
+                const response = await fetch('http://localhost:3000/live-score');
+                const scoreData = await response.json();
+                console.log(scoreData); // Debug: Log data
+
+                const matchesElement = document.getElementById('matches');
+                matchesElement.innerHTML = ''; // Clear content
+
+                if (scoreData && scoreData.data) {
+                    scoreData.data.forEach(match => {
+                        const matchElement = document.createElement('div');
+                        matchElement.classList.add('match');
+
+                        matchElement.innerHTML = `
+                            <h2>${match.name}</h2>
+                            <p><span class="status">Status:</span> ${match.status}</p>
+                            <p><span class="venue">Venue:</span> ${match.venue}</p>
+                            <p><span class="date">Date:</span> ${new Date(match.date).toLocaleDateString()}</p>
+                            <p><span class="teams">Teams:</span> ${match.teams.join(' vs ')}</p>
+                        `;
+
+                        matchesElement.appendChild(matchElement);
+                    });
+                } else {
+                    matchesElement.innerHTML = '<p class="no-data">No match data available.</p>';
+                }
+            } catch (error) {
+                document.getElementById('matches').innerHTML = '<p class="no-data">Error fetching score</p>';
+                console.error(error);
+            }
+        }
+
+        fetchScore();
+        setInterval(fetchScore, 3000); // Update every minute
+    </script>
+</body>
+</html>
